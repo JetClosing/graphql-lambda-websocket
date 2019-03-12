@@ -1,0 +1,36 @@
+{
+  "version": "0.0.2",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "jest",
+    "lint": "yarn run lint:eslint && yarn run lint:flow && yarn run lint:flow:coverage",
+    "lint:eslint": "eslint . --ext .js",
+    "lint:flow": "flow",
+    "lint:flow:coverage": "flow-coverage-report --config flow.coverage.json",
+    "build": "yarn workspaces run build"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-flow": "^7.0.0",
+    "babel-jest": "^24.1.0",
+    "babel-plugin-js-logger": "^1.0.17",
+    "babel-plugin-source-map-support": "^2.0.1",
+    "babel-plugin-testable": "^1.0.0",
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.3.0",
+    "flow-bin": "^0.93.0",
+    "flow-copy-source": "^2.0.3",
+    "flow-coverage-report": "^0.6.1",
+    "jest": "^24.1.0",
+    "rimraf": "^2.6.3"
+  }
+}

@@ -1,0 +1,1 @@
+An implementation of [`aws-lambda-graphql` Client](https://github.com/michalkvasnicak/aws-lambda-graphql/tree/master/packages/aws-lambda-graphql/src/client) without the extra bloat.

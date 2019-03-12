@@ -1,0 +1,29 @@
+{
+  "name": "graphql-lambda-client",
+  "version": "0.0.2",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "yarn build:babel && yarn build:flow",
+    "build:babel": "babel src --config-file ../../babel.config.js --ignore '**/__tests__/**' --out-dir lib",
+    "build:flow": "flow-copy-source -i '**/__tests__/**' src lib"
+  },
+  "dependencies": {
+    "apollo-link": "^1.2.9",
+    "backo2": "^1.0.2",
+    "eventemitter3": "^3.1.0",
+    "ulid": "^2.3.0",
+    "websocket": "^1.0.28",
+    "xstate": "^4.3.3"
+  },
+  "devDependencies": {
+    "graphql": "^14.1.1"
+  },
+  "peerDependencies": {
+    "graphql": "^14.1.1"
+  }
+}

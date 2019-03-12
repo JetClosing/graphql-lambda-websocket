@@ -1,0 +1,1 @@
+An implementation of [Apollo Link](https://www.apollographql.com/docs/link/) that uses `graphql-lambda-client`.

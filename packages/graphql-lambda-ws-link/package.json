@@ -1,0 +1,19 @@
+{
+  "name": "graphql-lambda-ws-link",
+  "version": "0.0.2",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "yarn build:babel && yarn build:flow",
+    "build:babel": "babel src --config-file ../../babel.config.js --ignore '**/__tests__/**' --out-dir lib",
+    "build:flow": "flow-copy-source -i '**/__tests__/**' src lib"
+  },
+  "dependencies": {
+    "apollo-link": "^1.2.9",
+    "graphql-lambda-client": "^0.0.2"
+  }
+}

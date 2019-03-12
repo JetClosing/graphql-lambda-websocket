@@ -1,0 +1,19 @@
+{
+  "globIncludePatterns": [
+    "packages/**/*.js"
+  ],
+  "globExcludePatterns": [
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/lib/**",
+    "**/node_modules/**",
+    "**/*.config.js",
+    "**/*.setup.js"
+  ],
+  "threshold": 80,
+  "outputDir": "./coverage/flow",
+  "reportTypes": [
+    "text",
+    "html"
+  ]
+}

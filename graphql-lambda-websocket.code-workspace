@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "javascript.validate.enable": false,
+    "eslint.autoFixOnSave": true,
+    "cSpell.words": [
+      "Backend",
+      "Backoff"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "Orta.vscode-jest",
+      "gcazaciuc.vscode-flow-ide",
+      "leizongmin.node-module-intellisense"
+    ]
+  }
+}
