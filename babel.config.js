@@ -5,11 +5,31 @@ module.exports = function (api) {
   }
 
   const presets = [
+    [
+      '@babel/preset-env',
+      {
+        targets: {
+          node: 'current',
+          browsers: 'defaults',
+        },
+      },
+    ],
     '@babel/preset-flow',
   ];
 
   const plugins = [
     '@babel/plugin-proposal-class-properties',
+    // [
+    //   'babel-plugin-js-logger',
+    //   {
+    //     format: {
+    //       level: 1,
+    //       separator: '.',
+    //       extensions: ['.js', '.jsx'],
+    //       project: false,
+    //     },
+    //   },
+    // ],
     'testable',
   ];
 
