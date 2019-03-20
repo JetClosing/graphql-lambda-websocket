@@ -1,0 +1,87 @@
+service: graphql-lambda-ws-example-backend
+
+plugins:
+  - serverless-plugin-graphql-lambda-ws
+  - serverless-plugin-tables # simple dynamodb definitions
+
+custom:
+  user-table-name: GraphQlWsExampleUser
+  graphql-lambda-ws:
+    schemaPath: './schema'
+    iamRoleStatements:
+      # Additional IAM Role Statements to give the HTTP and web socket lambdas
+      - Effect: Allow
+        Action:
+          - dynamodb:BatchGetItem
+          - dynamodb:GetItem
+          - dynamodb:Query
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: 
+          - Fn::GetAtt: [ UserDynamoDBTable, Arn ]
+    httpFunctionOptions:
+      # Additional configuration for the HTTP lambda
+      # https://serverless.com/framework/docs/providers/aws/guide/functions/
+      memorySize: 256
+      timeout: 5
+    wsFunctionOptions:
+      # Additional configuration for the web socket lambda
+      # https://serverless.com/framework/docs/providers/aws/guide/functions/
+      memorySize: 256
+      timeout: 5
+    authorizer:
+      # Authorizer configuration for HTTP requests and web socket connections
+      # None for this example
+    httpOptions:
+      # Additional configuration for the HTTP requests
+      # https://serverless.com/framework/docs/providers/aws/events/apigateway/
+      cors: true
+    awsLayer: 
+      # Use this to supply your own layer that contains AWS SDK >= 2.379.0. Otherwise one will be created automatically
+      # https://serverless.com/framework/docs/providers/aws/guide/layers/#aws---layers
+    tableNames:
+      # Custom dynamodb table names
+      events: # ${serviceName}-${stage}-GraphQlEvents
+      subscriptions: # ${serviceName}-${stage}-GraphQlSubscriptions
+      connections: # ${serviceName}-${stage}-GraphQlConnections
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-west-2
+  environment:
+    USER_TABLE_NAME: ${self:custom.user-table-name}
+  iamRoleStatements:
+    # Custom Statements for dynamoStreamReceiver
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
+      Resource: 
+        - Fn::GetAtt: [ UserDynamoDBTable, StreamArn ]
+    # Need this permission to publish pub-sub events
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource: 
+        - Fn::GetAtt: [ GraphQlEventsDynamoDBTable, Arn ]
+
+functions:
+  dynamoStreamReceiver:
+    handler: dynamoStreamReceiver.handler
+    events:
+      - stream:
+          type: dynamodb
+          arn: { Fn::GetAtt: [ UserDynamoDBTable, StreamArn ] }
+
+resources:
+  # serverless-plugin-tables for simple dynamodb definitions
+  tables:
+    User:
+      name: ${self:custom.user-table-name}
+      resourceName: UserDynamoDBTable
+      partitionKey: userId
+      streamType: both

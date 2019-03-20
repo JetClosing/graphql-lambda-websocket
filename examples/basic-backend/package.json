@@ -1,0 +1,20 @@
+{
+  "name": "graphql-lambda-ws-example",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "preserverless": "cd ../.. && yarn run build",
+    "serverless": "serverless"
+  },
+  "dependencies": {
+    "graphql": "^14.1.1",
+    "graphql-lambda-ws": "link:../../packages/graphql-lambda-ws",
+    "graphql-tools": "^4.0.4"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.379.0",
+    "serverless": "^1.39.0",
+    "serverless-plugin-graphql-lambda-ws": "link:../../packages/serverless-plugin-graphql-lambda-ws"
+  }
+}

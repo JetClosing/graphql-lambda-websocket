@@ -9,7 +9,7 @@ module.exports = function (api) {
       '@babel/preset-env',
       {
         targets: {
-          node: 'current',
+          node: '8',
           browsers: 'defaults',
         },
       },

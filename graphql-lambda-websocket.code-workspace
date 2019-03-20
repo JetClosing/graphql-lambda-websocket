@@ -9,7 +9,10 @@
     "eslint.autoFixOnSave": true,
     "cSpell.words": [
       "Backend",
-      "Backoff"
+      "Backoff",
+      "dynamodb",
+      "flowtype",
+      "lifecycle"
     ]
   },
   "extensions": {

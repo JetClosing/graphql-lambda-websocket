@@ -1,0 +1,9 @@
+{
+  "name": "aws-latest",
+  "version": "2.414.0",
+  "description": "Latest aws-sdk",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.414.0"
+  }
+}

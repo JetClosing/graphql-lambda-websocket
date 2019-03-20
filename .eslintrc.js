@@ -1,5 +1,6 @@
 module.exports = {
   extends: 'airbnb-base',
+  parser: 'babel-eslint',
   plugins: [
     'jest',
     'flowtype',
@@ -9,6 +10,7 @@ module.exports = {
   },
   rules: {
     'arrow-parens': ['error', 'always'],
+    'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
 
     // Jest
     'jest/no-disabled-tests': 'error',
@@ -20,7 +22,7 @@ module.exports = {
     // Flow
     'flowtype/require-valid-file-annotation': [
       'error',
-      'always'
+      'always',
     ],
     'flowtype/no-flow-fix-me-comments': 'error',
     'flowtype/no-weak-types': [
@@ -28,12 +30,12 @@ module.exports = {
       {
         any: true,
         Object: true,
-        Function: false
+        Function: false,
       }
     ],
     'flowtype/semi': [
       'error',
-      'always'
+      'always',
     ],
   },
   overrides: [
@@ -48,8 +50,8 @@ module.exports = {
         'examples/**',
       ],
       rules: {
-        'flowtype/require-valid-file-annotation': 'off'
-      }
-    }
-  ]
+        'flowtype/require-valid-file-annotation': 'off',
+      },
+    },
+  ],
 };

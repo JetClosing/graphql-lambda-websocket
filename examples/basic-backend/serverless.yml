@@ -1,0 +1,17 @@
+service: graphql-lambda-ws-example-basic-backend
+
+plugins:
+  - serverless-plugin-graphql-lambda-ws
+
+custom:
+  graphql-lambda-ws:
+    schemaPath: './schema'
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-west-2
+
+functions:
+  hello:
+    handler: handler.hello
