@@ -11,7 +11,7 @@ const createTableName = (plugin: GraphQlLambdaWsPlugin, name: string): string =>
   return `${serviceName}-${stage}-${name}`;
 };
 
-const ResourceNames = {
+export const ResourceNames = {
   SUBSCRIPTIONS: 'GraphQlSubscriptionsDynamoDBTable',
   CONNECTIONS: 'GraphQlConnectionsDynamoDBTable',
   EVENTS: 'GraphQlEventsDynamoDBTable',

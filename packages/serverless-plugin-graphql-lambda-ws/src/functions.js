@@ -4,6 +4,7 @@ import CustomRolesPlugin from 'serverless-plugin-custom-roles';
 
 import { createPolicy, createWebSocketPolicy } from './iam';
 import { getLayerName } from './layers';
+import { ResourceNames as TableResourceNames } from './tables';
 
 import type GraphQlLambdaWsPlugin from './index';
 
@@ -53,7 +54,7 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
         'dynamodb:PutItem',
       ],
       {
-        'Fn::GetAtt': ['GraphQlEventsDynamoDBTable', 'Arn'],
+        'Fn::GetAtt': [TableResourceNames.EVENTS, 'Arn'],
       },
     ),
   ];
@@ -104,7 +105,7 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
             'dynamodb:PutItem',
           ],
           {
-            'Fn::GetAtt': ['GraphQlConnectionsDynamoDBTable', 'Arn'],
+            'Fn::GetAtt': [TableResourceNames.CONNECTIONS, 'Arn'],
           },
         ),
         createPolicy(
@@ -115,7 +116,7 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
             'dynamodb:PutItem',
           ],
           {
-            'Fn::GetAtt': ['GraphQlSubscriptionsDynamoDBTable', 'Arn'],
+            'Fn::GetAtt': [TableResourceNames.SUBSCRIPTIONS, 'Arn'],
           },
         ),
       ],
@@ -127,7 +128,7 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
         {
           stream: {
             type: 'dynamodb',
-            arn: { 'Fn::GetAtt': ['GraphQlEventsDynamoDBTable', 'StreamArn'] },
+            arn: { 'Fn::GetAtt': [TableResourceNames.EVENTS, 'StreamArn'] },
             batchSize: 100,
             startingPosition: 'LATEST',
           },
@@ -144,7 +145,7 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
             'dynamodb:ListStreams',
           ],
           {
-            'Fn::GetAtt': ['GraphQlEventsDynamoDBTable', 'StreamArn'],
+            'Fn::GetAtt': [TableResourceNames.EVENTS, 'StreamArn'],
           },
         ),
         createPolicy(
@@ -152,7 +153,7 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
             'dynamodb:Query',
           ],
           {
-            'Fn::GetAtt': ['GraphQlSubscriptionsDynamoDBTable', 'Arn'],
+            'Fn::GetAtt': [TableResourceNames.SUBSCRIPTIONS, 'Arn'],
           },
         ),
         createPolicy(
@@ -160,7 +161,7 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
             'dynamodb:DeleteItem',
           ],
           {
-            'Fn::GetAtt': ['GraphQlConnectionsDynamoDBTable', 'Arn'],
+            'Fn::GetAtt': [TableResourceNames.CONNECTIONS, 'Arn'],
           },
         ),
       ],
