@@ -1,20 +1,20 @@
 // @flow
 /**
  * MIT License
- * 
+ *
  * Copyright (c) 2019 JetClosing
  * Copyright (c) 2019 Michal Kvasničák
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,26 +36,26 @@ export function connect({
   backoff,
   handleMessage,
   uri,
-  webSockImpl,
+  webSockImpl: WebSockImpl,
 }: ClientContext): Promise<w3cwebsocket> {
   return new Promise((resolve, reject) => {
     try {
-      const socket = new webSockImpl(uri);
+      const socket = new WebSockImpl(uri);
 
-      function onOpen() {
+      const onOpen = () => {
         // reset backoff
         backoff.reset();
 
         socket.onopen = null;
         socket.onerror = null;
         resolve(socket);
-      }
+      };
 
-      function onError(err: Error) {
+      const onError = (err: Error) => {
         socket.onopen = null;
         socket.onerror = null;
         reject(err);
-      }
+      };
 
       socket.onerror = onError;
       socket.onopen = onOpen;
@@ -77,7 +77,7 @@ export async function reconnect(context: ClientContext): Promise<w3cwebsocket> {
   // wait for backoff
   const duration = context.backoff.duration();
 
-  await new Promise(r => setTimeout(r, duration));
+  await new Promise((r) => setTimeout(r, duration));
 
   return connect(context);
 }
@@ -88,23 +88,26 @@ export function disconnect({ socket }: ClientContext): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (socket == null) {
-        return resolve();
+        resolve();
+        return;
       }
 
-      function onClose() {
+      /* eslint-disable no-param-reassign */
+      const onClose = () => {
         socket.onerror = null;
         socket.onclose = null;
         resolve();
-      }
+      };
 
-      function onError(err: Error) {
+      const onError = (err: Error) => {
         socket.onerror = null;
         socket.onclose = null;
         reject(err);
-      }
+      };
 
       socket.onclose = onClose;
       socket.onerror = onError;
+      /* eslint-enable no-param-reassign */
 
       // disconnect socket
       socket.close();
@@ -118,7 +121,7 @@ export function disconnect({ socket }: ClientContext): Promise<void> {
  * Removes socket on successful disconnect
  */
 export function onDisconnectSuccess() {
-  return assign<ClientContext>(ctx => ({ ...ctx, socket: null }));
+  return assign<ClientContext>((ctx) => ({ ...ctx, socket: null }));
 }
 
 /**
@@ -130,12 +133,13 @@ export function processOperations({
 }: ClientContext) {
   return (callback: Sender<ClientEvents>) => {
     if (socket == null) {
-      return;
+      return undefined;
     }
 
     // start operation processor
     operationProcessor.start(socket);
 
+    /* eslint-disable no-param-reassign */
     function onClose() {
       socket.onclose = null;
       operationProcessor.stop();
@@ -149,5 +153,6 @@ export function processOperations({
       operationProcessor.stop();
       socket.onclose = null;
     };
+    /* eslint-enable no-param-reassign */
   };
 }

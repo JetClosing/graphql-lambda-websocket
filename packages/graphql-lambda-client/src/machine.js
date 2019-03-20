@@ -1,20 +1,20 @@
 // @flow
 /**
  * MIT License
- * 
+ *
  * Copyright (c) 2019 JetClosing
  * Copyright (c) 2019 Michal Kvasničák
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,7 +29,7 @@ import * as services from './services';
 
 import type { ClientContext, ClientEvents, ClientStateSchema } from './types';
 
-export const clientMachine = Machine<ClientContext, ClientStateSchema, ClientEvents> ({
+export const clientMachine = Machine<ClientContext, ClientStateSchema, ClientEvents>({
   initial: 'idle',
   states: {
     idle: {
@@ -50,9 +50,8 @@ export const clientMachine = Machine<ClientContext, ClientStateSchema, ClientEve
         onError: [
           {
             target: 'connecting',
-            cond: context =>
-              context.reconnect &&
-              (context.backoff).attempts <= context.reconnectAttempts,
+            cond: (context) => (context.reconnect
+              && context.backoff.attempts <= context.reconnectAttempts),
           },
           { target: 'error' },
         ],
@@ -66,7 +65,7 @@ export const clientMachine = Machine<ClientContext, ClientStateSchema, ClientEve
       on: {
         // connections has been closed :(
         DISCONNECTED: [
-          { target: 'reconnecting', cond: ctx => ctx.reconnect },
+          { target: 'reconnecting', cond: (ctx) => ctx.reconnect },
           { target: 'error' },
         ],
         DISCONNECT: {
@@ -104,7 +103,7 @@ export const clientMachine = Machine<ClientContext, ClientStateSchema, ClientEve
       on: {
         // connections has been closed :(
         DISCONNECTED: [
-          { target: 'reconnecting', cond: ctx => ctx.reconnect },
+          { target: 'reconnecting', cond: (ctx) => ctx.reconnect },
           { target: 'error' },
         ],
         DISCONNECT: {

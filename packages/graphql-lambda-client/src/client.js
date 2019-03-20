@@ -1,20 +1,20 @@
 // @flow
 /**
  * MIT License
- * 
+ *
  * Copyright (c) 2019 JetClosing
  * Copyright (c) 2019 Michal Kvasničák
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,21 +28,19 @@ import Backoff from 'backo2';
 import { EventEmitter } from 'eventemitter3';
 import { interpret, Interpreter } from 'xstate/lib/interpreter';
 import { w3cwebsocket } from 'websocket';
+import type EventEmitterType, { ListenerFn } from 'eventemitter3';
 import { SERVER_EVENT_TYPES } from './constants';
 import { clientMachine } from './machine';
 import OperationProcessor from './operationProcessor';
 
-import type EventEmitterType, { ListenerFn } from 'eventemitter3';
-import type { ClientContext, ClientEvents, ClientStateSchema } from './types';
-import type { OperationRequest, GQLServerAllEvents, GQLServerEvents } from './types';
+import type {
+  ClientContext, ClientEvents, ClientStateSchema, GQLServerAllEvents, OperationRequest,
+} from './types';
 
-
-const globalOrWindow =
-  typeof global !== 'undefined'
-    ? global
-    : typeof window !== 'undefined'
-    ? window
-    : {};
+// eslint-disable-next-line no-nested-ternary
+const globalOrWindow = typeof global !== 'undefined'
+  ? global
+  : (typeof window !== 'undefined' ? window : {}); // eslint-disable-line no-undef
 const NativeWebSocket = globalOrWindow.WebSocket || globalOrWindow.MozWebSocket;
 
 type Options = {
@@ -102,11 +100,11 @@ export class GraphQlLambdaClient {
         uri,
         handleMessage: this.handleMessage,
         operationProcessor: this.operationProcessor,
-        webSockImpl: webSockImpl,
+        webSockImpl,
       }),
     ).start();
 
-    this.machine.onTransition(state => {
+    this.machine.onTransition((state) => {
       this.ee.emit(state.value, state.event.data);
     });
 
@@ -137,33 +135,19 @@ export class GraphQlLambdaClient {
     return () => this.ee.off(event, listener);
   };
 
-  onConnecting = (listener: ListenerFn): Function => {
-    return this.on('connecting', listener);
-  }
+  onConnecting = (listener: ListenerFn): Function => this.on('connecting', listener)
 
-  onConnected = (listener: ListenerFn): Function => {
-    return this.on('connected', listener);
-  }
+  onConnected = (listener: ListenerFn): Function => this.on('connected', listener)
 
-  onDisconnected = (listener: ListenerFn): Function => {
-    return this.on('disconnected', listener);
-  }
+  onDisconnected = (listener: ListenerFn): Function => this.on('disconnected', listener)
 
-  onError = (listener: ListenerFn): Function => {
-    return this.on('error', listener);
-  }
+  onError = (listener: ListenerFn): Function => this.on('error', listener)
 
-  onMessage = (listener: ListenerFn): Function => {
-    return this.on('message', listener);
-  }
+  onMessage = (listener: ListenerFn): Function => this.on('message', listener)
 
-  onReconnecting = (listener: ListenerFn): Function => {
-    return this.on('reconnecting', listener);
-  }
+  onReconnecting = (listener: ListenerFn): Function => this.on('reconnecting', listener)
 
-  onReconnected = (listener: ListenerFn): Function => {
-    return this.on('reconnected', listener);
-  }
+  onReconnected = (listener: ListenerFn): Function => this.on('reconnected', listener)
 
   handleMessage = (event: { data: string }) => {
     try {
@@ -176,9 +160,11 @@ export class GraphQlLambdaClient {
         }
         case SERVER_EVENT_TYPES.GQL_CONNECTED: {
           // connected
+          break;
         }
         case SERVER_EVENT_TYPES.GQL_ERROR: {
           // error
+          break;
         }
         case SERVER_EVENT_TYPES.GQL_SUBSCRIBED: {
           // subcribed

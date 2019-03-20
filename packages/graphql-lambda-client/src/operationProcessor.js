@@ -1,20 +1,20 @@
 // @flow
 /**
  * MIT License
- * 
+ *
  * Copyright (c) 2019 JetClosing
  * Copyright (c) 2019 Michal Kvasničák
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,15 +27,15 @@
 import { Observable } from 'apollo-link';
 import { getOperationAST, parse, print } from 'graphql';
 import { ulid } from 'ulid';
+import type { w3cwebsocket } from 'websocket';
 import formatMessage from './formatMessage';
 
 import type { OperationRequest, GQLOperation, GQLOperationResult } from './types';
-import type { w3cwebsocket } from 'websocket';
 
 type ExecutedOperation = {
   id: string;
   isSubscription: boolean;
-  observer: ZenObservable.SubscriptionObserver<any>;
+  observer: ZenObservable.SubscriptionObserver<mixed>;
   operation: OperationRequest;
   clearTimeout: () => void;
   startTimeout: () => void;
@@ -64,49 +64,47 @@ export class OperationProcessor {
     this.socket = null;
   }
 
-  execute = (operation: OperationRequest) => {
-    return new Observable(observer => {
-      try {
-        const query = (typeof operation.query !== 'string'
-          ? operation.query
-          : parse(operation.query));
-        const isSubscription = getOperationAST(
-            query,
-            operation.operationName || '',
-          ).operation === 'subscription';
-        let tmt = null;
-        const id = ulid();
-        const op: ExecutedOperation = {
-          id,
-          isSubscription,
-          observer,
-          operation,
-          clearTimeout: () => {
-            clearTimeout(tmt);
-          },
-          startTimeout: () => {
-            if (
-              this.operationTimeout !== Infinity &&
-              this.operationTimeout !== 0
-            ) {
-              tmt = setTimeout(() => {
-                clearTimeout(tmt);
-                delete this.executedOperations[id];
+  execute = (operation: OperationRequest) => new Observable((observer) => {
+    try {
+      const query = (typeof operation.query !== 'string'
+        ? operation.query
+        : parse(operation.query));
+      const isSubscription = getOperationAST(
+        query,
+        operation.operationName || '',
+      ).operation === 'subscription';
+      let tmt = null;
+      const id = ulid();
+      const op: ExecutedOperation = {
+        id,
+        isSubscription,
+        observer,
+        operation,
+        clearTimeout: () => {
+          clearTimeout(tmt);
+        },
+        startTimeout: () => {
+          if (
+            this.operationTimeout !== Infinity
+              && this.operationTimeout !== 0
+          ) {
+            tmt = setTimeout(() => {
+              clearTimeout(tmt);
+              delete this.executedOperations[id];
 
-                observer.error(new Error('Timed out'));
-              }, this.operationTimeout);
-            }
-          },
-        };
+              observer.error(new Error('Timed out'));
+            }, this.operationTimeout);
+          }
+        },
+      };
 
-        this.executedOperations[op.id] = op;
+      this.executedOperations[op.id] = op;
 
-        this.send(op);
-      } catch (e) {
-        observer.error(e);
-      }
-    });
-  };
+      this.send(op);
+    } catch (e) {
+      observer.error(e);
+    }
+  });
 
   processOperationResult = (event: GQLOperationResult) => {
     // if operation is a subscription, just stream a value
