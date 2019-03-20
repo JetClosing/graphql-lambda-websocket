@@ -1,7 +1,7 @@
 // @flow
 import processTables from './tables';
 import processLayers from './layers';
-import processFunctions from './functions';
+import processFunctions, { injectFunctionNames } from './functions';
 import processProvider from './provider';
 
 const PLUGIN_NAME = 'graphql-lambda-ws';
@@ -59,6 +59,9 @@ class GraphQlLambdaWsPlugin {
       [`${PLUGIN_NAME}:process:process`]: () => this.process(),
       'before:package:setupProviderConfiguration': () => this.spawn('process'),
     };
+
+    // Need to inject function names early to support function invokes
+    injectFunctionNames(this);
   }
 
   log(...args: mixed[]) {

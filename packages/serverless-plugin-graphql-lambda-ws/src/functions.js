@@ -13,6 +13,20 @@ export const FunctionNames = {
   EVENT: 'graphQlEventProcessor',
 };
 
+export const injectFunctionNames = (plugin: GraphQlLambdaWsPlugin) => {
+  if (!plugin.service.functions) {
+    // eslint-disable-next-line no-param-reassign
+    plugin.service.functions = {};
+  }
+
+  plugin.verbose('Injecting function names');
+  Object.assign(plugin.service.functions, {
+    [FunctionNames.HTTP]: {},
+    [FunctionNames.WEBSOCKET]: {},
+    [FunctionNames.EVENT]: {},
+  });
+};
+
 const getHandlerPath = (handlerName) => `node_modules/graphql-lambda-ws/lib/index.${handlerName}`;
 
 const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
@@ -121,7 +135,6 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
       ],
       layers,
       iamRoleStatements: [
-        // TODO: Allow custom resources for resolvers
         createWebSocketPolicy(stage),
         createPolicy(
           [
