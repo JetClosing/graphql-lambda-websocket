@@ -1,7 +1,12 @@
 {
   "name": "graphql-lambda-client",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/JetClosing/graphql-lambda-websocket.git",
+    "directory": "packages/graphql-lambda-client"
+  },
   "main": "lib/index.js",
   "files": [
     "lib"
