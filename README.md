@@ -1,6 +1,6 @@
 # graphql-lambda-websocket
 
-This is a collection of libraries that make integrating GraphQL Subscriptions with [Amazon API Gateway Websocket's][link-api-gateway-websockets] easy when using a [Serverless][link-serverless] project.
+This is a collection of libraries that make integrating GraphQL Subscriptions with [Amazon API Gateway Websocket's][link-api-gateway-websockets] easy when using a [Serverless][link-serverless-aws] project.
 
 [![Serverless][icon-serverless]][link-serverless]
 [![License][icon-license]][link-license]
