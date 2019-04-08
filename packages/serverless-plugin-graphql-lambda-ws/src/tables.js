@@ -1,4 +1,6 @@
 // @flow
+
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import TablesPlugin from 'serverless-plugin-tables';
 
 import type GraphQlLambdaWsPlugin from './index';

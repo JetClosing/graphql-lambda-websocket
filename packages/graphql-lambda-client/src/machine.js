@@ -24,6 +24,7 @@
  * SOFTWARE.
  */
 
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import { Machine } from 'xstate';
 import * as services from './services';
 

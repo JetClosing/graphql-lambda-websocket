@@ -24,8 +24,10 @@
  * SOFTWARE.
  */
 
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import { actions } from 'xstate';
 
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import type { Sender } from 'xstate';
 import type { w3cwebsocket } from 'websocket';
 import type { ClientContext, ClientEvents } from './types';

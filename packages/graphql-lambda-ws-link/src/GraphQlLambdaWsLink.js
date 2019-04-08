@@ -1,6 +1,8 @@
 // @flow
 
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import { ApolloLink, Operation } from 'apollo-link';
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import { GraphQlLambdaClient } from 'graphql-lambda-client';
 
 type Options = {

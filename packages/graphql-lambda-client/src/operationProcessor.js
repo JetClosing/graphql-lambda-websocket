@@ -24,18 +24,19 @@
  * SOFTWARE.
  */
 
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import { Observable } from 'apollo-link';
 import { getOperationAST, parse, print } from 'graphql';
 import { ulid } from 'ulid';
 import type { w3cwebsocket } from 'websocket';
-import formatMessage from './formatMessage';
+import formatMessage from './formatMessage'; // eslint-disable-line import/no-named-as-default
 
 import type { OperationRequest, GQLOperation, GQLOperationResult } from './types';
 
 type ExecutedOperation = {
   id: string;
-  isSubscription: boolean;
-  observer: ZenObservable.SubscriptionObserver<mixed>;
+  isSubscription: ?boolean;
+  observer: Observable.SubscriptionObserver<mixed>;
   operation: OperationRequest;
   clearTimeout: () => void;
   startTimeout: () => void;
@@ -69,10 +70,11 @@ export class OperationProcessor {
       const query = (typeof operation.query !== 'string'
         ? operation.query
         : parse(operation.query));
-      const isSubscription = getOperationAST(
+      const operationDefinition = getOperationAST(
         query,
         operation.operationName || '',
-      ).operation === 'subscription';
+      );
+      const isSubscription = operationDefinition && operationDefinition.operation === 'subscription';
       let tmt = null;
       const id = ulid();
       const op: ExecutedOperation = {
@@ -158,6 +160,7 @@ export class OperationProcessor {
       type: 'GQL_OP',
     };
 
+    // $FlowIgnoreLine - Can't be null if started
     this.socket.send(formatMessage(message));
     operation.startTimeout();
   };

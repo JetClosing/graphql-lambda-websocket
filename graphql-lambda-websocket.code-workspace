@@ -12,7 +12,9 @@
       "Backoff",
       "dynamodb",
       "flowtype",
-      "lifecycle"
+      "lifecycle",
+      "workspaces",
+      "ulid"
     ]
   },
   "extensions": {

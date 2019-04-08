@@ -26,12 +26,13 @@
 
 import Backoff from 'backo2';
 import { EventEmitter } from 'eventemitter3';
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import { interpret, Interpreter } from 'xstate/lib/interpreter';
 import { w3cwebsocket } from 'websocket';
 import type EventEmitterType, { ListenerFn } from 'eventemitter3';
 import { SERVER_EVENT_TYPES } from './constants';
 import { clientMachine } from './machine';
-import OperationProcessor from './operationProcessor';
+import OperationProcessor from './operationProcessor'; // eslint-disable-line import/no-named-as-default
 
 import type {
   ClientContext, ClientEvents, ClientStateSchema, GQLServerAllEvents, OperationRequest,
@@ -155,6 +156,7 @@ export class GraphQlLambdaClient {
 
       switch (message.type) {
         case SERVER_EVENT_TYPES.GQL_OP_RESULT: {
+          // $FlowIgnoreLine - message is GQLOperationResult
           this.operationProcessor.processOperationResult(message);
           break;
         }
@@ -167,7 +169,7 @@ export class GraphQlLambdaClient {
           break;
         }
         case SERVER_EVENT_TYPES.GQL_SUBSCRIBED: {
-          // subcribed
+          // subscribed
           break;
         }
         default: {

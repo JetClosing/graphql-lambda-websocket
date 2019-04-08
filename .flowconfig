@@ -8,6 +8,7 @@
 <PROJECT_ROOT>/.vscode/.*
 <PROJECT_ROOT>/.history/.*
 <PROJECT_ROOT>/plop/.*
+<PROJECT_ROOT>/examples/.*
 
 [libs]
 flow-typed

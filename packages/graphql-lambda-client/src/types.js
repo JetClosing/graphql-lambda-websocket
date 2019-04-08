@@ -25,16 +25,17 @@
  */
 
 import type Backoff from 'backo2';
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import type { w3cwebsocket } from 'websocket';
 import type { DocumentNode, ExecutionResult } from 'graphql';
-import type OperationProcessor from './operationProcessor';
+import type OperationProcessor from './operationProcessor'; // eslint-disable-line import/no-named-as-default
 
 export interface ClientContext {
   backoff: Backoff;
   /**
    * Function to parse messages from server (this will be assigned to socket)
    */
-  handleMessage: (event: { data: string }) => any;
+  handleMessage: (event: { data: string }) => mixed;
   operationProcessor: OperationProcessor;
   reconnect: boolean;
   reconnectAttempts: number;
@@ -50,6 +51,14 @@ export interface ClientContext {
    * Web socket implementation to use
    */
   webSockImpl: typeof w3cwebsocket;
+}
+
+export interface OperationRequest {
+  extensions?: { [string]: mixed };
+  operationName?: string;
+  query: string | DocumentNode;
+  variables?: { [string]: mixed };
+  [string]: mixed;
 }
 
 export interface ClientStateSchema {
