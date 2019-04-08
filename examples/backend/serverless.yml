@@ -23,13 +23,13 @@ custom:
     httpFunctionOptions:
       # Additional configuration for the HTTP lambda
       # https://serverless.com/framework/docs/providers/aws/guide/functions/
-      memorySize: 256
-      timeout: 5
+      memorySize: 1024
+      timeout: 60
     wsFunctionOptions:
       # Additional configuration for the web socket lambda
       # https://serverless.com/framework/docs/providers/aws/guide/functions/
-      memorySize: 256
-      timeout: 5
+      memorySize: 1024
+      timeout: 60
     authorizer:
       # Authorizer configuration for HTTP requests and web socket connections
       # None for this example

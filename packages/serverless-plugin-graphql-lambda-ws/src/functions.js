@@ -134,6 +134,8 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
           },
         },
       ],
+      timeout: 300,
+      memorySize: 1024,
       layers,
       iamRoleStatements: [
         createWebSocketPolicy(stage),
