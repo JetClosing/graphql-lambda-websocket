@@ -1,6 +1,6 @@
 {
   "name": "graphql-lambda-client",
-  "version": "0.0.8",
+  "version": "0.0.0-beta0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -18,9 +18,9 @@
     "build:flow": "flow-copy-source -i '**/__tests__/**' src lib"
   },
   "dependencies": {
-    "apollo-link": "^1.2.9",
+    "apollo-link": "1.2.11",
     "backo2": "^1.0.2",
-    "eventemitter3": "^3.1.0",
+    "eventemitter3": "^3.1.2",
     "ulid": "^2.3.0",
     "websocket": "^1.0.28",
     "xstate": "^4.3.3"
