@@ -1,6 +1,6 @@
 {
   "name": "graphql-lambda-ws-link",
-  "version": "0.0.8",
+  "version": "0.0.9-beta0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "build:flow": "flow-copy-source -i '**/__tests__/**' src lib"
   },
   "dependencies": {
-    "apollo-link": "^1.2.9",
-    "graphql-lambda-client": "^0.0.8"
+    "apollo-link": "1.2.11",
+    "graphql-lambda-client": "^0.0.9-beta0"
   }
 }
