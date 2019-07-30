@@ -26,6 +26,7 @@
 
 export const CLIENT_EVENT_TYPES = {
   GQL_OP: 'GQL_OP',
+  GQL_UNSUBSCRIBE: 'GQL_UNSUBSCRIBE',
 };
 
 export const SERVER_EVENT_TYPES = {

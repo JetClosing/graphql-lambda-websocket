@@ -44,23 +44,21 @@ export function connect({
     try {
       const socket = new WebSockImpl(uri);
 
-      const onOpen = () => {
-        // reset backoff
-        backoff.reset();
-
-        socket.onopen = null;
-        socket.onerror = null;
-        resolve(socket);
-      };
-
-      const onError = (err: Error) => {
-        socket.onopen = null;
-        socket.onerror = null;
+      socket.onerror = (err: Error) => {
+        socket.onopen = undefined;
+        socket.onerror = undefined;
         reject(err);
       };
 
-      socket.onerror = onError;
-      socket.onopen = onOpen;
+      socket.onopen = () => {
+        // reset backoff
+        backoff.reset();
+
+        socket.onopen = undefined;
+        socket.onerror = undefined;
+        resolve(socket);
+      };
+
       socket.onmessage = handleMessage;
     } catch (e) {
       reject(e);
@@ -86,33 +84,33 @@ export async function reconnect(context: ClientContext): Promise<w3cwebsocket> {
 
 export const onReconnectSuccess = onConnectSuccess;
 
-export function disconnect({ socket }: ClientContext): Promise<void> {
+export function disconnect({
+  operationProcessor,
+  socket,
+}: ClientContext): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
+      operationProcessor.unsubscribeFromAllOperations();
+
       if (socket == null) {
         resolve();
-        return;
+      } else {
+        /* eslint-disable no-param-reassign */
+        socket.onclose = () => {
+          socket.onerror = undefined;
+          socket.onclose = undefined;
+          resolve();
+        };
+        socket.onerror = (err) => {
+          socket.onerror = undefined;
+          socket.onclose = undefined;
+          reject(err);
+        };
+        /* eslint-enable no-param-reassign */
+
+        // disconnect socket
+        socket.close();
       }
-
-      /* eslint-disable no-param-reassign */
-      const onClose = () => {
-        socket.onerror = null;
-        socket.onclose = null;
-        resolve();
-      };
-
-      const onError = (err: Error) => {
-        socket.onerror = null;
-        socket.onclose = null;
-        reject(err);
-      };
-
-      socket.onclose = onClose;
-      socket.onerror = onError;
-      /* eslint-enable no-param-reassign */
-
-      // disconnect socket
-      socket.close();
     } catch (e) {
       reject(e);
     }
@@ -140,21 +138,19 @@ export function processOperations({
 
     // start operation processor
     operationProcessor.start(socket);
-
-    /* eslint-disable no-param-reassign */
-    function onClose() {
-      socket.onclose = null;
+    // register to connection close
+    // eslint-disable-next-line no-param-reassign
+    socket.onclose = () => {
+      // eslint-disable-next-line no-param-reassign
+      socket.onclose = undefined;
       operationProcessor.stop();
       callback('DISCONNECTED'); // this will trigger reconnect or error
-    }
-
-    // register to connection close
-    socket.onclose = onClose;
+    };
 
     return () => {
       operationProcessor.stop();
-      socket.onclose = null;
+      // eslint-disable-next-line no-param-reassign
+      socket.onclose = undefined;
     };
-    /* eslint-enable no-param-reassign */
   };
 }

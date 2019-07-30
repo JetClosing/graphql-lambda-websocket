@@ -14,13 +14,16 @@ import path from 'path';
 const GRAPH_QL_SCHEMA_PATH = process.env.GRAPH_QL_SCHEMA_PATH || './schema';
 const GRAPH_QL_CONNECTIONS_TABLE = process.env.GRAPH_QL_CONNECTIONS_TABLE || 'GraphQlConnections';
 const GRAPH_QL_SUBSCRIPTIONS_TABLE = process.env.GRAPH_QL_SUBSCRIPTIONS_TABLE || 'GraphQlSubscriptions';
-
-const connectionManager = new DynamoDBConnectionManager({
-  connectionsTable: GRAPH_QL_CONNECTIONS_TABLE,
-});
+const GRAPH_QL_SUBSCRIPTION_OPS_TABLE = process.env.GRAPH_QL_SUBSCRIPTION_OPS_TABLE || 'GraphQlSubscriptionOps';
 
 const subscriptionManager = new DynamoDBSubscriptionManager({
   subscriptionsTableName: GRAPH_QL_SUBSCRIPTIONS_TABLE,
+  subscriptionOperationsTableName: GRAPH_QL_SUBSCRIPTION_OPS_TABLE,
+});
+
+const connectionManager = new DynamoDBConnectionManager({
+  connectionsTable: GRAPH_QL_CONNECTIONS_TABLE,
+  subscriptions: subscriptionManager,
 });
 
 const rootDir = pkgDir.sync();
@@ -29,7 +32,7 @@ const relSchemaPath = path.join(relRootPath, GRAPH_QL_SCHEMA_PATH);
 // $FlowIgnoreLine
 const schema = require(relSchemaPath); // eslint-disable-line
 
-const wrappedHttpHander = createHttpHandler({
+const wrappedHttpHandler = createHttpHandler({
   connectionManager,
   schema,
 });
@@ -39,7 +42,7 @@ export const httpHandler = async (event: Object, context: Object, callback: Func
   // Serverless provides "content-type", but library expects "Content-Type" https://github.com/michalkvasnicak/aws-lambda-graphql/blob/master/packages/aws-lambda-graphql/src/createHttpHandler.ts#L25
   // eslint-disable-next-line no-param-reassign
   event.headers['Content-Type'] = event.headers['Content-Type'] || event.headers['content-type'];
-  const result = await wrappedHttpHander(event, context, callback);
+  const result = await wrappedHttpHandler(event, context, callback);
   return result;
 };
 

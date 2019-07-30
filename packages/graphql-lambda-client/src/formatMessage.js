@@ -30,6 +30,8 @@ import type {
   GQLErrorEvent,
   GQLOperationResult,
   GQLSubscribed,
+  GQLUnsubscribe,
+  GQLUnsubscribed,
 } from './types';
 
 type AllowedProtocolEvents =
@@ -37,7 +39,9 @@ type AllowedProtocolEvents =
   | GQLConnectedEvent
   | GQLErrorEvent
   | GQLOperationResult
-  | GQLSubscribed;
+  | GQLSubscribed
+  | GQLUnsubscribe
+  | GQLUnsubscribed;
 
 export const formatMessage = (event: AllowedProtocolEvents): string => JSON.stringify(event);
 

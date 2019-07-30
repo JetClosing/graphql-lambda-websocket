@@ -1,6 +1,6 @@
 {
   "name": "graphql-lambda-ws",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -18,16 +18,16 @@
     "build:flow": "flow-copy-source -i '**/__tests__/**' src lib"
   },
   "dependencies": {
-    "apollo-link": "^1.2.8",
-    "aws-lambda-graphql": "^0.1.0",
-    "graphql-subscriptions": "^1.0.0",
+    "apollo-link": "1.2.11",
+    "aws-lambda-graphql": "~0.6.0",
+    "graphql-subscriptions": "1.1.0",
     "pkg-dir": "^3.0.0"
   },
   "peerDependencies": {
-    "graphql": "^14.1.1"
+    "graphql": "14.3.1"
   },
   "devDependencies": {
     "aws-sdk": "^2.410.0",
-    "graphql": "^14.1.1"
+    "graphql": "14.3.1"
   }
 }

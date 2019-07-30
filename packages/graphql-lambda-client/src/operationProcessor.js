@@ -25,22 +25,33 @@
  */
 
 // $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
-import { Observable } from 'apollo-link';
+import { type ExecutionResult, Observable } from 'apollo-link';
 import { getOperationAST, parse, print } from 'graphql';
-import { ulid } from 'ulid';
 import type { w3cwebsocket } from 'websocket';
-import formatMessage from './formatMessage'; // eslint-disable-line import/no-named-as-default
+import { formatMessage } from './formatMessage'; // eslint-disable-line import/no-named-as-default
+import { CLIENT_EVENT_TYPES } from './constants';
 
-import type { OperationRequest, GQLOperation, GQLOperationResult } from './types';
+import type { OperationRequest, GQLOperationResult } from './types';
 
-type ExecutedOperation = {
+type GQLOperationRequest = {
   id: string;
   isSubscription: ?boolean;
   observer: Observable.SubscriptionObserver<mixed>;
   operation: OperationRequest;
   clearTimeout: () => void;
   startTimeout: () => void;
+  type: 'GQL_OP';
 };
+
+type GQLUnsubscribeRequest = {
+  /**
+   * Same as ID of operation used to start the subscription
+   */
+  id: string;
+  type: 'GQL_UNSUBSCRIBE';
+};
+
+type ExecutedOperation = GQLOperationRequest | GQLUnsubscribeRequest;
 
 type Options = {
   /**
@@ -51,13 +62,15 @@ type Options = {
 };
 
 export class OperationProcessor {
-  executedOperations: { [id: string]: ExecutedOperation };
+  executedOperations: { [id: string]: GQLOperationRequest };
+  nextOperationId: number;
   queuedOperations: ExecutedOperation[];
   operationTimeout: number;
   stopped: boolean;
   socket: ?w3cwebsocket;
 
-  constructor({ operationTimeout = Infinity }: Options = {}) {
+  constructor({ operationTimeout = Infinity }: Options) {
+    this.nextOperationId = 0;
     this.stopped = true;
     this.operationTimeout = operationTimeout;
     this.queuedOperations = [];
@@ -65,7 +78,8 @@ export class OperationProcessor {
     this.socket = null;
   }
 
-  execute = (operation: OperationRequest) => new Observable((observer) => {
+  // eslint-disable-next-line max-len
+  execute = (operation: OperationRequest): Observable<ExecutionResult> => new Observable((observer) => {
     try {
       const query = (typeof operation.query !== 'string'
         ? operation.query
@@ -76,8 +90,9 @@ export class OperationProcessor {
       );
       const isSubscription = operationDefinition && operationDefinition.operation === 'subscription';
       let tmt = null;
-      const id = ulid();
-      const op: ExecutedOperation = {
+      let closed = false;
+      const id = this.generateNextOperationId();
+      const op: GQLOperationRequest = {
         id,
         isSubscription,
         observer,
@@ -98,14 +113,29 @@ export class OperationProcessor {
             }, this.operationTimeout);
           }
         },
+        type: CLIENT_EVENT_TYPES.GQL_OP,
       };
 
       this.executedOperations[op.id] = op;
 
       this.send(op);
+
+      if (isSubscription) {
+        return {
+          get closed() {
+            return closed;
+          },
+          unsubscribe: () => {
+            closed = true;
+            this.unsubscribeOperation(op.id);
+          },
+        };
+      }
     } catch (e) {
       observer.error(e);
     }
+
+    return undefined;
   });
 
   processOperationResult = (event: GQLOperationResult) => {
@@ -122,6 +152,42 @@ export class OperationProcessor {
         delete this.executedOperations[event.id];
         operation.observer.complete();
       }
+    }
+  };
+
+  unsubscribeFromAllOperations = () => {
+    Object.keys(this.executedOperations).forEach((id) => {
+      this.unsubscribeOperation(id);
+    });
+  };
+
+  generateNextOperationId = (): string => {
+    this.nextOperationId += 1;
+    return this.nextOperationId.toString();
+  };
+
+  unsubscribeOperation = (id: string) => {
+    const executedOperation = this.executedOperations[id];
+
+    if (executedOperation) {
+      if (executedOperation.isSubscription) {
+        // send STOP event
+        this.send({
+          id,
+          type: CLIENT_EVENT_TYPES.GQL_UNSUBSCRIBE,
+        });
+      }
+
+      delete this.executedOperations[id];
+    } else {
+      // this operation is only queued, so it hasn't been sent yet
+      this.queuedOperations = this.queuedOperations.filter((op) => {
+        if (op.id === id) {
+          return false;
+        }
+
+        return true;
+      });
     }
   };
 
@@ -148,21 +214,31 @@ export class OperationProcessor {
   };
 
   sendRaw = (operation: ExecutedOperation) => {
-    const query = (typeof operation.operation.query !== 'string'
-      ? print(operation.operation.query)
-      : operation.operation.query);
-    const message: GQLOperation = {
-      id: operation.id,
-      payload: {
-        ...operation.operation,
-        query,
-      },
-      type: 'GQL_OP',
-    };
+    if (operation.type === CLIENT_EVENT_TYPES.GQL_OP) {
+      operation.startTimeout();
+    }
 
-    // $FlowIgnoreLine - Can't be null if started
-    this.socket.send(formatMessage(message));
-    operation.startTimeout();
+    if (this.socket) {
+      const message = operation.type === CLIENT_EVENT_TYPES.GQL_OP
+        ? {
+          type: CLIENT_EVENT_TYPES.GQL_OP,
+          id: operation.id,
+          payload: {
+            ...operation.operation,
+            query: (typeof operation.operation.query !== 'string'
+              ? print(operation.operation.query)
+              : operation.operation.query),
+          },
+        }
+        : {
+          type: CLIENT_EVENT_TYPES.GQL_UNSUBSCRIBE,
+          id: operation.id,
+        };
+
+      // eslint-disable-next-line flowtype/no-flow-fix-me-comments
+      // $FlowFixMe
+      this.socket.send(formatMessage(message));
+    }
   };
 
   flushQueuedMessages = () => {

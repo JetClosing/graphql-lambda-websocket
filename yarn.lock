@@ -957,7 +957,7 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apollo-link@^1.2.8:
+apollo-link@1.2.11:
   version "1.2.11"
   resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.11.tgz#493293b747ad3237114ccd22e9f559e5e24a194d"
   integrity sha512-PQvRCg13VduLy3X/0L79M6uOpTh5iHdxnxYuo8yL7sJlWybKRJwsv4IcRBJpMFbChOOaHY7Og9wgPo6DLKDKDA==
@@ -966,16 +966,6 @@ apollo-link@^1.2.8:
     ts-invariant "^0.3.2"
     tslib "^1.9.3"
     zen-observable-ts "^0.8.18"
-
-apollo-link@^1.2.9:
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.9.tgz#40a8f0b90716ce3fd6beb27b7eae1108b92e0054"
-  integrity sha512-ZLUwthOFZq4lxchQ2jeBfVqS/UDdcVmmh8aUw6Ar9awZH4r+RgkcDeu2ooFLUfodWE3mZr7wIZuYsBas/MaNVA==
-  dependencies:
-    apollo-utilities "^1.2.1"
-    ts-invariant "^0.3.2"
-    tslib "^1.9.3"
-    zen-observable-ts "^0.8.16"
 
 apollo-utilities@^1.2.1:
   version "1.2.1"
@@ -1105,16 +1095,16 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-aws-lambda-graphql@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/aws-lambda-graphql/-/aws-lambda-graphql-0.1.0.tgz#4277a3a34df6e1d193ca026b3360d2a62718de8f"
-  integrity sha512-Q2nHBD8AeA97RwyZrMJndnfp77WIX30IdhcY5kn8vyr8pecmT46t5QRQqUrf7JHtElVFhChaejzc7Wz+/bcTug==
+aws-lambda-graphql@~0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/aws-lambda-graphql/-/aws-lambda-graphql-0.6.0.tgz#bfe5ed98262bf11d639d30fdee2ebb57bf9e4306"
+  integrity sha512-dhWv18TU645EZvjm7VDwSVHJEcn7YsVdAyM4V7vlMKohrQOAIXU+HAIJiKmSGfllz3THliMWu+1CvrKKqqW5fQ==
   dependencies:
     "@types/aws-lambda" "8.10.17"
     "@types/backo2" "1.0.0"
     backo2 "1.0.2"
     content-type "^1.0.4"
-    eventemitter3 "^3.1.0"
+    eventemitter3 "^3.1.2"
     iterall "^1.2.2"
     ulid "^2.3.0"
     xstate "^4.2.3"
@@ -2118,10 +2108,10 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
   integrity sha1-Cr9PHKpbyx96nYrMbepPqqBLrJs=
 
-eventemitter3@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
-  integrity sha512-ivIvhpq/Y0uSjcHDcOIccjmYjGLcP09MFGE7ysAwkAvkXfpZlC985pH2/ui64DKazbTW/4kN3yqozUxlXzI6cA==
+eventemitter3@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
+  integrity sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==
 
 events@1.1.1:
   version "1.1.1"
@@ -2600,12 +2590,19 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
-graphql-subscriptions@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-1.0.0.tgz#475267694b3bd465af6477dbab4263a3f62702b8"
-  integrity sha512-+ytmryoHF1LVf58NKEaNPRUzYyXplm120ntxfPcgOBC7TnK7Tv/4VRHeh4FAR9iL+O1bqhZs4nkibxQ+OA5cDQ==
+graphql-subscriptions@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-1.1.0.tgz#5f2fa4233eda44cf7570526adfcf3c16937aef11"
+  integrity sha512-6WzlBFC0lWmXJbIVE8OgFgXIP4RJi3OQgTPa0DVMsDXdpRDjTsM1K9wfl5HSYX7R87QAGlvcv2Y4BIZa/ItonA==
   dependencies:
     iterall "^1.2.1"
+
+graphql@14.3.1:
+  version "14.3.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.3.1.tgz#b3aa50e61a841ada3c1f9ccda101c483f8e8c807"
+  integrity sha512-FZm7kAa3FqKdXy8YSSpAoTtyDFMIYSpCDOr+3EqlI1bxmtHu+Vv/I2vrSeT1sBOEnEniX3uo4wFhFdS/8XN6gA==
+  dependencies:
+    iterall "^1.2.2"
 
 graphql@^14.1.1:
   version "14.1.1"
@@ -5913,14 +5910,6 @@ yargs@^13.1.0:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^13.0.0"
-
-zen-observable-ts@^0.8.16:
-  version "0.8.16"
-  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.16.tgz#969367299074fe17422fe2f46ee417e9a30cf3fa"
-  integrity sha512-pQl75N7qwgybKVsh6WFO+WwPRijeQ52Gn1vSf4uvPFXald9CbVQXLa5QrOPEJhdZiC+CD4quqOVqSG+Ptz5XLA==
-  dependencies:
-    tslib "^1.9.3"
-    zen-observable "^0.8.0"
 
 zen-observable-ts@^0.8.18:
   version "0.8.18"

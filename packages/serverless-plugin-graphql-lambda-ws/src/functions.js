@@ -14,6 +14,8 @@ export const FunctionNames = {
   EVENT: 'graphQlEventProcessor',
 };
 
+const getHandlerPath = (handlerName) => `node_modules/graphql-lambda-ws/lib/index.${handlerName}`;
+
 export const injectFunctionNames = (plugin: GraphQlLambdaWsPlugin) => {
   if (!plugin.service.functions) {
     // eslint-disable-next-line no-param-reassign
@@ -22,13 +24,17 @@ export const injectFunctionNames = (plugin: GraphQlLambdaWsPlugin) => {
 
   plugin.verbose('Injecting function names');
   Object.assign(plugin.service.functions, {
-    [FunctionNames.HTTP]: {},
-    [FunctionNames.WEBSOCKET]: {},
-    [FunctionNames.EVENT]: {},
+    [FunctionNames.HTTP]: {
+      handler: getHandlerPath('httpHandler'),
+    },
+    [FunctionNames.WEBSOCKET]: {
+      handler: getHandlerPath('websocketHandler'),
+    },
+    [FunctionNames.EVENT]: {
+      handler: getHandlerPath('eventHandler'),
+    },
   });
 };
-
-const getHandlerPath = (handlerName) => `node_modules/graphql-lambda-ws/lib/index.${handlerName}`;
 
 const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
   plugin.verbose('Processing functions');
@@ -119,6 +125,17 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
             'Fn::GetAtt': [TableResourceNames.SUBSCRIPTIONS, 'Arn'],
           },
         ),
+        createPolicy(
+          [
+            'dynamodb:BatchWriteItem',
+            'dynamodb:DeleteItem',
+            'dynamodb:GetItem',
+            'dynamodb:PutItem',
+          ],
+          {
+            'Fn::GetAtt': [TableResourceNames.SUBSCRIPTION_OPS, 'Arn'],
+          },
+        ),
       ],
     },
     [FunctionNames.EVENT]: {
@@ -164,6 +181,17 @@ const processFunctions = async (plugin: GraphQlLambdaWsPlugin) => {
           ],
           {
             'Fn::GetAtt': [TableResourceNames.CONNECTIONS, 'Arn'],
+          },
+        ),
+        createPolicy(
+          [
+            'dynamodb:BatchWriteItem',
+            'dynamodb:DeleteItem',
+            'dynamodb:GetItem',
+            'dynamodb:PutItem',
+          ],
+          {
+            'Fn::GetAtt': [TableResourceNames.SUBSCRIPTION_OPS, 'Arn'],
           },
         ),
       ],

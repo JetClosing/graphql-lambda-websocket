@@ -28,6 +28,8 @@ import type Backoff from 'backo2';
 // $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
 import type { w3cwebsocket } from 'websocket';
 import type { DocumentNode, ExecutionResult } from 'graphql';
+// $FlowIgnoreLine - Yarn workspaces not supported https://github.com/flow-typed/flow-typed/issues/1391
+import type { StateSchema } from 'xstate';
 import type OperationProcessor from './operationProcessor'; // eslint-disable-line import/no-named-as-default
 
 export interface ClientContext {
@@ -53,25 +55,25 @@ export interface ClientContext {
   webSockImpl: typeof w3cwebsocket;
 }
 
-export interface OperationRequest {
+export type OperationRequest = {
   extensions?: { [string]: mixed };
   operationName?: string;
   query: string | DocumentNode;
   variables?: { [string]: mixed };
   [string]: mixed;
-}
+};
 
-export interface ClientStateSchema {
+export type ClientStateSchema = StateSchema & {
   states: {
-    idle: {};
-    connecting: {};
-    disconnecting: {};
-    connected: {};
-    reconnecting: {};
-    reconnected: {};
-    error: {};
+    idle: ?mixed;
+    connecting: ?mixed;
+    disconnecting: ?mixed;
+    connected: ?mixed;
+    reconnecting: ?mixed;
+    reconnected: ?mixed;
+    error: ?mixed;
   };
-}
+};
 
 export type ClientEvents =
   | { type: 'CONNECT' }
@@ -117,8 +119,17 @@ export type GQLSubscribed = GQLServerEvents & {
   },
 };
 
+export type GQLUnsubscribe = GQLServerEvents & {
+};
+
+export type GQLUnsubscribed = GQLServerEvents & {
+};
+
+export type GQLClientAllEvents = GQLOperation | GQLUnsubscribe;
+
 export type GQLServerAllEvents =
   | GQLConnectedEvent
   | GQLErrorEvent
   | GQLOperationResult
-  | GQLSubscribed;
+  | GQLSubscribed
+  | GQLUnsubscribed;

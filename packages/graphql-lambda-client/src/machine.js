@@ -46,7 +46,7 @@ export const clientMachine = Machine<ClientContext, ClientStateSchema, ClientEve
         src: services.connect,
         onDone: {
           target: 'connected',
-          actions: [services.onConnectSuccess()],
+          actions: services.onConnectSuccess(),
         },
         onError: [
           {

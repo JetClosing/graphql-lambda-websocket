@@ -24,6 +24,7 @@ const processProvider = (plugin: GraphQlLambdaWsPlugin) => {
     GRAPH_QL_SUBSCRIPTIONS_TABLE: pluginTableNames.SUBSCRIPTIONS,
     GRAPH_QL_CONNECTIONS_TABLE: pluginTableNames.CONNECTIONS,
     GRAPH_QL_EVENTS_TABLE: pluginTableNames.EVENTS,
+    GRAPH_QL_SUBSCRIPTION_OPS_TABLE: pluginTableNames.SUBSCRIPTION_OPS,
   };
 
   // eslint-disable-next-line no-param-reassign

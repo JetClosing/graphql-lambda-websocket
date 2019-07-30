@@ -17,12 +17,14 @@ export const ResourceNames = {
   SUBSCRIPTIONS: 'GraphQlSubscriptionsDynamoDBTable',
   CONNECTIONS: 'GraphQlConnectionsDynamoDBTable',
   EVENTS: 'GraphQlEventsDynamoDBTable',
+  SUBSCRIPTION_OPS: 'GraphQlSubscriptionOpsDynamoDBTable',
 };
 
 const TableNames = {
   SUBSCRIPTIONS: 'GraphQlSubscriptions',
   CONNECTIONS: 'GraphQlConnections',
   EVENTS: 'GraphQlEvents',
+  SUBSCRIPTION_OPS: 'GraphQlSubscriptionOps',
 };
 
 export const createPluginTableNames = (plugin: GraphQlLambdaWsPlugin): PluginTableNames => {
@@ -34,6 +36,7 @@ export const createPluginTableNames = (plugin: GraphQlLambdaWsPlugin): PluginTab
     SUBSCRIPTIONS: tableNames.subscriptions || createTableName(plugin, TableNames.SUBSCRIPTIONS),
     CONNECTIONS: tableNames.connections || createTableName(plugin, TableNames.CONNECTIONS),
     EVENTS: tableNames.events || createTableName(plugin, TableNames.EVENTS),
+    SUBSCRIPTION_OPS: tableNames.subscriptionOperations || createTableName(plugin, TableNames.SUBSCRIPTION_OPS),
   };
 };
 
@@ -66,6 +69,11 @@ const processTables = async (plugin: GraphQlLambdaWsPlugin) => {
         resourceName: ResourceNames.EVENTS,
         partitionKey: 'id',
         streamType: 'newItem',
+      },
+      GraphQlSubscriptionsOpDynamoDBTable: {
+        name: pluginTableNames.SUBSCRIPTION_OPS,
+        resourceName: ResourceNames.EVENTS,
+        partitionKey: 'subscriptionId',
       },
     },
   });
