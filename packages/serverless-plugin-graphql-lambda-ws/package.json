@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-graphql-lambda-ws",
-  "version": "0.0.9-beta0",
+  "version": "0.0.9",
   "license": "MIT",
   "repository": {
     "type": "git",
