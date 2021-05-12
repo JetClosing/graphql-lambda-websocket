@@ -19,7 +19,7 @@
     "build:flow": "npx flow-copy-source -i '**/__tests__/**' src lib"
   },
   "dependencies": {
-    "merge": "^1.2.1",
+    "merge": "^2.1.1",
     "pascal-case": "^2.0.1",
     "serverless-plugin-custom-roles": "1.1.0",
     "serverless-plugin-tables": "1.0.1"
